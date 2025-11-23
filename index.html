@@ -3,128 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetHart</title>
+    <title>My SweetHeart</title>
+    
+    <!-- Tailwind CSS for modern utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
     <script src="https://kit.fontawesome.com/6251c87c47.js" crossorigin="anonymous"></script>
+
     <style>
-        /* --- General Body Styles --- */
+        /* --- Base & Typography --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* --- Body & Background --- */
         body {
             background-image: url(pics/mika-luoma-jc0rtJtBC1k-unsplash.jpg);
-            background-color: #ff69b4;
-            background-repeat: no-repeat;
-            background-size: 100% 100%; 
-            background-attachment: fixed;
+            background-size: cover; 
+            color: #fff;
+            min-height: 100vh;
             padding: 20px;
-            color: rgb(147, 106, 106);
-            font-family: Arial, sans-serif;
-            text-align: center; /* Center the text and block elements */
-        }
-        
-        h1 {
-            color: hsl(332, 9%, 73%);
         }
 
-        /* --- Button Styles --- */
-        button{
-            position: relative;
-            background-color: #ff69b4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }       
-        button:hover {
-            transition: background-color 0.3s;
-            box-shadow: inset 0 0 10px rgba(29, 19, 19, 0.2);
-            background-color: #ff85c1;
-            color: aqua;
-        }
-
-        /* --- Container and Marquee Area Styles --- */
-        .Container {
-            /* Cleaned up margin/display issues from div.container, apply basic layout here */
-            margin-top: 50px;
-        }
-
-        .PicsAdventure {
-            /* Added padding for vertical marginal space above and below the marquee */
-            padding: 20px 0; 
-            margin-top: 30px;
-        }
-
-        /* --- Image Styles (The Frame and Spacing) --- */
-        /* Target all images inside the marquee with the 'first-pic' class */
-        .first-pic, .second-pic, .third-pic {
-            /* Set fixed dimensions and ensure aspect ratio is maintained */
+        /* --- WAVY IMAGE STYLES --- */
+        .pic-item {
+            /* Custom properties for the wave effect */
+            --s: 15px; 
+            
+            /* Dimensions */
             width: 250px; 
-            height: 150px;
+            height: 250px;
+            aspect-ratio: 1;
+            
+            /* Fill and Clipping */
             object-fit: cover;
             display: inline-block;
+            overflow: hidden; 
+
+            /* Decorative Removal */
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
             
-            /* Spacing between images */
-            margin-right: 20px; 
-            
-            /* WOODEN FRAME EFFECT */
-            border-radius: 15px; /* Rounded corners for the whole frame/image */
-            border: 15px solid #8B4513; /* Thick brown border for the wood */
-            box-shadow: 
-                0 4px 8px rgba(0, 0, 0, 0.3), /* Soft drop shadow */
-                inset 0 0 10px rgba(0, 0, 0, 0.2), /* Inner shadow for bevel */
-                0 0 0 5px #FF69B4 inset; /* Pink inner outline/frame */
+            /* Masking the Image Content */
+            border-radius: calc(3.5*var(--s)); 
+            mask: 
+                radial-gradient(calc(sqrt(2)*var(--s)),#000 calc(100% - 1px),#0000),
+                conic-gradient(#000 0 0) content-box,
+                radial-gradient(calc(sqrt(2)*var(--s)),#0000 100%,#000 calc(100% + 1px)) 
+                var(--s) var(--s) padding-box;
+            mask-size: calc(var(--s)*4) calc(var(--s)*4);
         }
-        
-        /* Apply hover effect directly to the images */
-        .first-pic:hover, .second-pic:hover, .third-pic:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        
-        /* Removed redundant/conflicting general 'img' styles */
-        
     </style>
 </head>
-<body>
-    <h1>
-        <i class="fa-solid fa-heart"> Welcome My SweetHart!</i>
+<body class="flex flex-col items-center">
+    
+    <h1 class="text-4xl font-extrabold text-pink-300 drop-shadow-lg mb-8 mt-10">
+        <i class="fa-solid fa-heart text-red-500"></i> Welcome My SweetHeart!
     </h1>
-    <button>
+    
+    <!-- Cleaned up button with Tailwind styling -->
+    <button class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg 
+                   shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
         Click Me!
     </button>
-    <br><br>
-    <div class="Container">
-        <div class="PicsAdventure">
-            <marquee behavior="scroll" direction="left" id="photoMarquee"> 
-                <img class="first-pic" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 1">
-                <img class="first-pic" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 2">
-                <img class="first-pic" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 3">
+    
+    <!-- Cleaned up structure to focus on the marquee -->
+    <div id="photo-section" class="w-full max-w-6xl mt-12">
+        <div id="pics-adventure" class="bg-gray-900/50 p-6 rounded-xl shadow-2xl">
+            
+            <!-- Marquee is now clean, without the film strip border CSS -->
+            <marquee behavior="scroll" direction="left" id="photoMarquee" 
+                     class="w-full overflow-hidden py-4"> 
+                
+                <!-- Applied 'pic-item' class consistently -->
+                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 1">
+                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 2">
+                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 3">
+                
+                <!-- Add more images as needed -->
             </marquee>
-            <option value="choices"></option>
         </div>
-        <div>
-            <li>asd</li>
-            <li>asdsadsadsa</li>
-            <li>asdadsa</li>
-            <li></li>
-            <li></li>
-        </div>
+        
+        <!-- Removed Useless: The empty <div> with <li>s and the <option> tag. -->
     </div>
     
     <script>
+        // Log setup for better debugging
+        /* Removed firestore initialization since it was not used and not required here */
+
         const marqueeElement = document.getElementById('photoMarquee');
 
+        // Added event listeners to pause/resume the marquee on hover/touch
         if (marqueeElement) {
-            marqueeElement.addEventListener('mouseover', function() {
-                marqueeElement.stop(); // Stop the scroll
+            marqueeElement.addEventListener('mouseover', () => marqueeElement.stop());
+            marqueeElement.addEventListener('mouseout', () => marqueeElement.start());
+            
+            // For touch devices
+            marqueeElement.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent scrolling on touch
+                marqueeElement.stop();
             });
-
-            marqueeElement.addEventListener('mouseout', function() {
-                marqueeElement.start(); // Resume the scroll
-            });
+            marqueeElement.addEventListener('touchend', () => marqueeElement.start());
         }
+
+        // Add hover effect to images using JavaScript for non-CSS property changes
+        document.querySelectorAll('.pic-item').forEach(img => {
+            img.addEventListener('mouseover', () => {
+                img.style.transform = 'scale(1.05)';
+                img.style.transition = 'transform 0.3s';
+                img.style.cursor = 'pointer';
+            });
+            img.addEventListener('mouseout', () => {
+                img.style.transform = 'scale(1)';
+            });
+        });
     </script>
 </body>
 </html>
