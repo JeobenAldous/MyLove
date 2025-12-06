@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My SweetHeart</title>
-    
+    <title>MySweetHart</title>
     <!-- Tailwind CSS for modern utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
     <script src="https://kit.fontawesome.com/6251c87c47.js" crossorigin="anonymous"></script>
-
     <style>
         /* --- Base & Typography --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -29,33 +26,63 @@
         body {
             background-image: url(pics/mika-luoma-jc0rtJtBC1k-unsplash.jpg);
             background-size: cover; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: #fff;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* --- WAVY IMAGE STYLES --- */
+        h1 {
+            color: hsl(332, 9%, 73%);
+        }
+
+        /* --- Button Styles --- */
+        #exitButton {
+            position: relative;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }       
+        #exitButton:hover {
+            box-shadow: inset 0 0 10px rgba(29, 19, 19, 0.2);
+            background-color: #ff85c1;
+            color: aqua;
+        }
+
+        /* --- Hidden Content Area --- */
+        .hidden-content-area {
+            /* This class will be toggled by JS to show/hide the content */
+            display: none; 
+            margin-top: 20px;
+            transition: opacity 0.3s ease-in-out; 
+            width: 100%;
+            max-width: 6xl;
+        }
+
+        /* --- WAVY IMAGE STYLES (Used inside the marquees) --- */
         .pic-item {
-            /* Custom properties for the wave effect */
             --s: 15px; 
-            
-            /* Dimensions */
             width: 250px; 
             height: 250px;
             aspect-ratio: 1;
-            
-            /* Fill and Clipping */
             object-fit: cover;
             display: inline-block;
             overflow: hidden; 
-
-            /* Decorative Removal */
+            transition: transform 0.3s; 
             padding: 0;
             border: none;
             background: transparent;
             box-shadow: none;
-            
-            /* Masking the Image Content */
+            cursor: pointer; 
             border-radius: calc(3.5*var(--s)); 
             mask: 
                 radial-gradient(calc(sqrt(2)*var(--s)),#000 calc(100% - 1px),#0000),
@@ -64,69 +91,226 @@
                 var(--s) var(--s) padding-box;
             mask-size: calc(var(--s)*4) calc(var(--s)*4);
         }
+        
+        .pic-item-hover {
+            transform: scale(1.05);
+        }
+
+        /* --- Modal Overlay Styles (Unchanged) --- */
+        #imageModal {
+            opacity: 0; 
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.9); 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal-visible {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: flex !important;
+        }
+
+        #modalContent {
+            max-width: 90%;
+            max-height: 80%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: scale(0.1); 
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+            transform-origin: center;
+        }
+        
+        .modal-visible #modalContent {
+            transform: scale(1);
+        }
+
+        #exitButton {
+            margin-top: 20px;
+            background-color: #f44336; 
+        }
+
+        #exitButton:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* --- Content Container and Boxes --- */
+        .Container {
+            margin-top: 40px;
+        }
+        
+        .content-box {
+            cursor: pointer;
+            border: 2px solid transparent; 
+            transition: border-color 0.3s;
+        }
+        .content-box:hover {
+            border-color: #ff69b4; 
+        }
+
     </style>
 </head>
-<body class="flex flex-col items-center">
-    
+<body>
     <h1 class="text-4xl font-extrabold text-pink-300 drop-shadow-lg mb-8 mt-10">
         <i class="fa-solid fa-heart text-red-500"></i> Welcome My SweetHeart!
     </h1>
     
-    <!-- Cleaned up button with Tailwind styling -->
-    <button class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg 
-                   shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-        Click Me!
-    </button>
-    
-    <!-- Cleaned up structure to focus on the marquee -->
-    <div id="photo-section" class="w-full max-w-6xl mt-12">
-        <div id="pics-adventure" class="bg-gray-900/50 p-6 rounded-xl shadow-2xl">
-            
-            <!-- Marquee is now clean, without the film strip border CSS -->
-            <marquee behavior="scroll" direction="left" id="photoMarquee" 
-                     class="w-full overflow-hidden py-4"> 
-                
-                <!-- Applied 'pic-item' class consistently -->
-                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 1">
-                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 2">
-                <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 3">
-                
-                <!-- Add more images as needed -->
-            </marquee>
-        </div>
+    <!-- --- Content Container and Boxes (The Clickable Grid) --- -->
+    <div id="content-container" class="Container w-full max-w-6xl p-4">
+        <div class="text-2xl font-bold text-pink-300 mb-6 text-center">My Adventures</div>
         
-        <!-- Removed Useless: The empty <div> with <li>s and the <option> tag. -->
+        <!-- Responsive Grid for Boxes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Box 1: Toggle Target is #content-area-1 -->
+            <div id="box1" class="content-box bg-gray-900/50 p-6 rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02]" data-target="content-area-1">
+                <h3 class="text-xl font-bold text-pink-300 mb-2">Marquee 1: Romantic Photos</h3>
+                <p class="text-gray-300 text-sm">Click here to toggle the photo stream!</p>
+            </div>
+            
+            <!-- Box 2: Toggle Target is #content-area-2 -->
+            <div class="content-box bg-gray-900/50 p-6 rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02]" data-target="content-area-2">
+                <h3 class="text-xl font-bold text-pink-300 mb-2">Marquee 2: Vacation Memories</h3>
+                <p class="text-gray-300 text-sm">Click here to toggle the photo stream!</p>
+            </div>
+            
+            <!-- Box 3: Toggle Target is #content-area-3 -->
+            <div class="content-box bg-gray-900/50 p-6 rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02]" data-target="content-area-3">
+                <h3 class="text-xl font-bold text-pink-300 mb-2">Marquee 3: Future Plans</h3>
+                <p class="text-gray-300 text-sm">Click here to toggle the photo stream!</p>
+            </div>
+            
+            <!-- Box 4: Toggle Target is #content-area-4 -->
+            <div class="content-box bg-gray-900/50 p-6 rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02]" data-target="content-area-4">
+                <h3 class="text-xl font-bold text-pink-300 mb-2">Marquee 4: Random Cuteness</h3>
+                <p class="text-gray-300 text-sm">Click here to toggle the photo stream!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- INDEPENDENT HIDDEN CONTENT AREAS --- -->
+
+    <!-- Content Area 1 (Toggled by Box 1) -->
+    <div id="content-area-1" class="hidden-content-area bg-gray-900/50 p-6 rounded-xl shadow-2xl">
+        <marquee behavior="scroll" direction="left" class="w-full overflow-hidden py-4"> 
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 1" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 2" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo 3" onclick="openModal(this)">
+        </marquee>
+    </div>
+
+    <!-- Content Area 2 (Toggled by Box 2) -->
+    <div id="content-area-2" class="hidden-content-area bg-gray-900/50 p-6 rounded-xl shadow-2xl">
+        <marquee behavior="scroll" direction="left" class="w-full overflow-hidden py-4"> 
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo A" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo B" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo C" onclick="openModal(this)">
+        </marquee>
+    </div>
+
+    <!-- Content Area 3 (Toggled by Box 3) -->
+    <div id="content-area-3" class="hidden-content-area bg-gray-900/50 p-6 rounded-xl shadow-2xl">
+        <marquee behavior="scroll" direction="left" class="w-full overflow-hidden py-4"> 
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo X" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo Y" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo Z" onclick="openModal(this)">
+        </marquee>
+    </div>
+
+    <!-- Content Area 4 (Toggled by Box 4) -->
+    <div id="content-area-4" class="hidden-content-area bg-gray-900/50 p-6 rounded-xl shadow-2xl">
+        <marquee behavior="scroll" direction="left" class="w-full overflow-hidden py-4"> 
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo I" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo II" onclick="openModal(this)">
+            <img class="pic-item" src="/pics/jeobenLOVEAngelica.jpg" alt="Photo III" onclick="openModal(this)">
+        </marquee>
+    </div>
+    
+    <!-- --- Image Modal --- (Kept separate as it is a global element) -->
+    <div id="imageModal">
+        <img id="modalContent" src="" alt="Full-sized image">
+        <button id="exitButton" class="font-bold py-3 px-6 rounded-lg 
+                   shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+            Exit View
+        </button>
     </div>
     
     <script>
-        // Log setup for better debugging
-        /* Removed firestore initialization since it was not used and not required here */
+        const imageModal = document.getElementById('imageModal');
+        const modalContent = document.getElementById('modalContent');
+        const exitButton = document.getElementById('exitButton');
+        const contentBoxes = document.querySelectorAll('.content-box');
 
-        const marqueeElement = document.getElementById('photoMarquee');
+        // --- Image Modal Functions ---
+        window.openModal = function(imageElement) {
+            modalContent.src = imageElement.src;
+            imageModal.classList.add('modal-visible'); 
+        }
 
-        // Added event listeners to pause/resume the marquee on hover/touch
-        if (marqueeElement) {
+        const closeModal = function() {
+            imageModal.classList.remove('modal-visible');
+        }
+
+        exitButton.onclick = closeModal;
+        
+        // Hide modal if user clicks outside the image (on the black background)
+        imageModal.onclick = function(event) {
+            if (event.target === imageModal) {
+                closeModal();
+            }
+        }
+        
+        // --- NEW: General Box Toggle Logic ---
+        contentBoxes.forEach(box => {
+            box.addEventListener('click', function() {
+                // 1. Get the ID of the target content area from the data-target attribute
+                const targetId = this.getAttribute('data-target');
+                if (!targetId) return;
+
+                const targetElement = document.getElementById(targetId);
+                if (!targetElement) return;
+
+                // 2. Toggle the display style
+                if (targetElement.style.display === 'none' || targetElement.style.display === '') {
+                    targetElement.style.display = 'block';
+                } else {
+                    targetElement.style.display = 'none';
+                }
+            });
+        });
+
+
+        // --- Image Hover and Marquee Pause/Resume Logic ---
+        document.querySelectorAll('.pic-item').forEach(img => {
+            // Hover effect
+            img.addEventListener('mouseover', () => {
+                img.classList.add('pic-item-hover');
+            });
+            img.addEventListener('mouseout', () => {
+                img.classList.remove('pic-item-hover');
+            });
+        });
+
+        // Marquee pause/resume logic for all marquees
+        document.querySelectorAll('marquee').forEach(marqueeElement => {
             marqueeElement.addEventListener('mouseover', () => marqueeElement.stop());
             marqueeElement.addEventListener('mouseout', () => marqueeElement.start());
             
-            // For touch devices
             marqueeElement.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent scrolling on touch
+                e.preventDefault(); 
                 marqueeElement.stop();
             });
             marqueeElement.addEventListener('touchend', () => marqueeElement.start());
-        }
-
-        // Add hover effect to images using JavaScript for non-CSS property changes
-        document.querySelectorAll('.pic-item').forEach(img => {
-            img.addEventListener('mouseover', () => {
-                img.style.transform = 'scale(1.05)';
-                img.style.transition = 'transform 0.3s';
-                img.style.cursor = 'pointer';
-            });
-            img.addEventListener('mouseout', () => {
-                img.style.transform = 'scale(1)';
-            });
         });
     </script>
 </body>
